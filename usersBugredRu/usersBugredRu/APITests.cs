@@ -4,6 +4,8 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using usersBugredRu.Helpers;
+using static usersBugredRu.Models.RegisterRequestModel;
 
 namespace usersBugredRu
 {
@@ -14,37 +16,23 @@ namespace usersBugredRu
         {
         }
 
+        [Test]
         public void RegistrationTest()
         {
-            RestClient client = new RestClient("http://users.bugred.ru/tasks/rest/doregister")
+            RequestHelper requestHelper = new RequestHelper("http://users.bugred.ru/tasks/rest/doregister");
+            Helper helper = new Helper();
+            RegistrationRequestModel body = new RegistrationRequestModel()
             {
-                Timeout = 300000
+                Email = "Mashenka" + helper.DateTimeNowString + "@gmail.com",
+                Name = "Mashenka" + helper.DateTimeNowString,
+                Password = "1"
             };
-            RestRequest request = new RestRequest(Method.POST);
-            //request.AddHeader("Content-Type", "application/json");
-
-            Dictionary<string, string> body = GenerateUserData();
-            request.AddJsonBody(body);
-
-            IRestResponse response = client.Execute(request);
-
-            JObject json = JObject.Parse(response.Content);
+            IRestResponse response = requestHelper.SendPostRequest(body);
+            JObject jsonResponse = JObject.Parse(response.Content);
+            //Console.WriteLine(jsonResponse);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            Assert.AreEqual(body["email"], json["account"]["email"]?.ToString());
-        }
-
-        public Dictionary<string, string> GenerateUserData()
-        {
-            string email = "milli1@gmail.ru";
-            string name = "Mashenka";   
-            string password = "1";
-            return new Dictionary<string, string>()
-            {
-                {"email", email },
-                {"name", name },
-                {"password", password }
-            };
+            Assert.AreEqual(body.Email, jsonResponse["email"].ToString());
         }
     }
 }

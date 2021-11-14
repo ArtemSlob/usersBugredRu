@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace usersBugredRu
+namespace usersBugredRu.Helpers
 {
-    class RequestHelper
+    class Helper
     {
-        public Rqu
+        public string DateTimeNowString = DateTime.Now.ToString("ddMMyyyyhhmmss");
     }
 }
