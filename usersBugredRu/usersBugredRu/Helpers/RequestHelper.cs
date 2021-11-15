@@ -12,9 +12,9 @@ namespace usersBugredRu.Helpers
     {
         private RestClient _client;
 
-        public RequestHelper(string requestURL)
+        public RequestHelper(string requestURN)
         {
-            _client = new RestClient(requestURL);
+            _client = new RestClient("http://users.bugred.ru/tasks/rest/" + requestURN);
         }
 
         public IRestResponse SendPostRequest(object body)

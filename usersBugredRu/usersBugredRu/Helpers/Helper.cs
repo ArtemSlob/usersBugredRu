@@ -9,5 +9,17 @@ namespace usersBugredRu.Helpers
     class Helper
     {
         public string DateTimeNowString = DateTime.Now.ToString("ddMMyyyyhhmmss");
+
+        public bool CheckResponseForAllCompanyUsers(List<string> companyUsersRequest, string companyUsersResponse)
+        {
+            foreach (string user in companyUsersRequest)
+            {
+                if (!companyUsersResponse.Contains(user))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
