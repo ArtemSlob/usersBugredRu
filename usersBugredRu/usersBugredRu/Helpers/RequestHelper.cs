@@ -14,7 +14,7 @@ namespace usersBugredRu.Helpers
 
         public RequestHelper(string requestURN)
         {
-            _client = new RestClient("http://users.bugred.ru/tasks/rest/" + requestURN);
+            _client = new RestClient("http://users.bugred.ru/" + requestURN);
         }
 
         public IRestResponse SendPostRequest(object body)
@@ -24,8 +24,7 @@ namespace usersBugredRu.Helpers
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(JsonConvert.SerializeObject(body));
 
-            IRestResponse response = _client.Execute(request);
-            return response;
+            return _client.Execute(request);
         }
     }
 }
