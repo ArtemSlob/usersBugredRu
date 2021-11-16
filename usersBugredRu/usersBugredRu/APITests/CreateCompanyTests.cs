@@ -11,31 +11,33 @@ namespace usersBugredRu.APITests
 {
     class CreateCompanyTests
     {
+        private RequestHelper _requestHelper;
+        private Helper _helper;
+
         [SetUp]
         public void Setup()
         {
+            _requestHelper = new RequestHelper("tasks/rest/createcompany");
+            _helper = new Helper();
         }
 
         [Test]
         public void CreateCompanyTest()
         {
-            RequestHelper requestHelper = new RequestHelper("tasks/rest/createcompany");
-            Helper helper = new Helper();
             CreateCompanyRequestModel body = new CreateCompanyRequestModel()
             {
                 CompanyName = "Alcoholics and Parasites",
                 CompanyType = "ООО",
-                CompanyUsers = new List<string> { helper.NewUserEmail(), helper.NewUserEmail() },
-                EmailOwner = helper.NewUserEmail()
+                CompanyUsers = new List<string> { _helper.NewUserEmail(), _helper.NewUserEmail() },
+                EmailOwner = _helper.NewUserEmail()
             };
-            IRestResponse response = requestHelper.SendPostRequest(body);
+            IRestResponse response = _requestHelper.SendPostRequest(body);
             JObject jsonResponse = JObject.Parse(response.Content);
-            Console.WriteLine(jsonResponse);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(body.CompanyName, jsonResponse["company"]["name"].ToString());
             Assert.AreEqual(body.CompanyType, jsonResponse["company"]["type"].ToString());
-            Assert.IsTrue(helper.CheckResponseForAllCompanyUsers(body.CompanyUsers, jsonResponse["company"]["users"].ToString()));
+            Assert.IsTrue(_helper.CheckResponseForAllCompanyUsers(body.CompanyUsers, jsonResponse["company"]["users"].ToString()));
         }       
     }
 }

@@ -32,7 +32,6 @@ namespace usersBugredRu.APITests
             };
             IRestResponse response = _requestHelper.SendPostRequest(body);
             JObject jsonResponse = JObject.Parse(response.Content);
-            Console.WriteLine(jsonResponse);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual(body.Name, jsonResponse["name"].ToString());
@@ -57,7 +56,6 @@ namespace usersBugredRu.APITests
             };
             IRestResponse response = _requestHelper.SendPostRequest(testBody);
             JObject jsonResponse = JObject.Parse(response.Content);
-            Console.WriteLine(jsonResponse);
 
             Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
             Assert.AreEqual("email " + preConditionBody.Email + " уже есть в базе", jsonResponse["message"].ToString());
@@ -81,7 +79,6 @@ namespace usersBugredRu.APITests
             };
             IRestResponse response = _requestHelper.SendPostRequest(testBody);
             JObject jsonResponse = JObject.Parse(response.Content);
-            Console.WriteLine(jsonResponse);
 
             Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
             Assert.AreEqual("Текущее ФИО " + preConditionBody.Name + " уже есть в базе", jsonResponse["message"].ToString());
@@ -105,7 +102,6 @@ namespace usersBugredRu.APITests
             };
             IRestResponse response = _requestHelper.SendPostRequest(testBody);
             JObject jsonResponse = JObject.Parse(response.Content);
-            Console.WriteLine(jsonResponse);
 
             Assert.AreEqual(HttpStatusCode.Conflict, response.StatusCode);
             Assert.AreEqual("пользователь с email " + preConditionBody.Email + " и именем " + preConditionBody.Name + " уже есть в базе"
@@ -123,7 +119,6 @@ namespace usersBugredRu.APITests
             };
             IRestResponse response = _requestHelper.SendPostRequest(body);
             JObject jsonResponse = JObject.Parse(response.Content);
-            Console.WriteLine(jsonResponse);
 
             Assert.AreEqual(422, (int)response.StatusCode);
             Assert.AreEqual("поле фио является обязательным", jsonResponse["message"].ToString());
@@ -140,7 +135,6 @@ namespace usersBugredRu.APITests
             };
             IRestResponse response = _requestHelper.SendPostRequest(body);
             JObject jsonResponse = JObject.Parse(response.Content);
-            Console.WriteLine(jsonResponse);
 
             Assert.AreEqual(422, (int)response.StatusCode);
             Assert.AreEqual("поле email является обязательным", jsonResponse["message"].ToString());

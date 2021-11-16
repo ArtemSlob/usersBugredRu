@@ -11,23 +11,25 @@ namespace usersBugredRu.APITests
 {
     class DeleteUserTests
     {
+        private RequestHelper _requestHelper;
+        private Helper _helper;
+
         [SetUp]
         public void Setup()
         {
+            _requestHelper = new RequestHelper("tasks/rest/deleteuser");
+            _helper = new Helper();
         }
 
         [Test]
         public void DeleteUserTest()
         {
-            RequestHelper requestHelper = new RequestHelper("tasks/rest/deleteuser");
-            Helper helper = new Helper();
             Dictionary<string, string> body = new Dictionary<string, string>()
             {
-                { "email", helper.NewUserEmail()}
+                { "email", _helper.NewUserEmail()}
             };
-            IRestResponse response = requestHelper.SendPostRequest(body);
+            IRestResponse response = _requestHelper.SendPostRequest(body);
             JObject jsonResponse = JObject.Parse(response.Content);
-            Console.WriteLine(jsonResponse);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual("Пользователь с email " + body["email"] + " успешно удален", jsonResponse["message"].ToString());

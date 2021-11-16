@@ -11,26 +11,28 @@ namespace usersBugredRu.APITests
 {
     class CreateTaskTests
     {
+        private RequestHelper _requestHelper;
+        private Helper _helper;
+
         [SetUp]
         public void Setup()
         {
+            _requestHelper = new RequestHelper("tasks/rest/createtask");
+            _helper = new Helper();
         }
 
         [Test]
         public void CreateTaskTest()
         {
-            RequestHelper requestHelper = new RequestHelper("tasks/rest/createtask");
-            Helper helper = new Helper();
             CreateTaskRequestModel body = new CreateTaskRequestModel()
             {
                 TaskTitle = "New task",
                 TaskDescription = "Description for new task",
-                EmailOwner = helper.NewUserEmail(),
-                EmailAssign = helper.NewUserEmail()
+                EmailOwner = _helper.NewUserEmail(),
+                EmailAssign = _helper.NewUserEmail()
             };
-            IRestResponse response = requestHelper.SendPostRequest(body);
+            IRestResponse response = _requestHelper.SendPostRequest(body);
             JObject jsonResponse = JObject.Parse(response.Content);
-            Console.WriteLine(jsonResponse);
 
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             Assert.AreEqual("success", jsonResponse["type"].ToString());
