@@ -45,8 +45,8 @@ namespace usersBugredRu
             {
                 CompanyName = "Alcoholics and Parasites",
                 CompanyType = "ООО",
-                CompanyUsers = new List<string> { "mashenka7@gmail.com", "mashenka9@gmail.com" },
-                EmailOwner = "mashenka@gmail.com"
+                CompanyUsers = new List<string> { helper.NewUserEmail(), helper.NewUserEmail() },
+                EmailOwner = helper.NewUserEmail()
             };
             IRestResponse response = requestHelper.SendPostRequest(body);
             JObject jsonResponse = JObject.Parse(response.Content);
@@ -65,10 +65,10 @@ namespace usersBugredRu
             Helper helper = new Helper();
             CreateTaskRequestModel body = new CreateTaskRequestModel()
             {
-                TaskTitle = "New task" + helper.DateTimeNowString,
-                TaskDescription = "Description for new task" + helper.DateTimeNowString,
-                EmailOwner = "mashenka@gmail.com",
-                EmailAssign = "mashenka7@gmail.com"
+                TaskTitle = "New task",
+                TaskDescription = "Description for new task",
+                EmailOwner = helper.NewUserEmail(),
+                EmailAssign = helper.NewUserEmail()
             };
             IRestResponse response = requestHelper.SendPostRequest(body);
             JObject jsonResponse = JObject.Parse(response.Content);
@@ -85,21 +85,41 @@ namespace usersBugredRu
         {
             RequestHelper requestHelper = new RequestHelper("tasks/rest/createuser");
             Helper helper = new Helper();
+            string dateNow = DateTime.Now.ToString("yyyy-MM-dd");
             CreateUserRequestModel body = new CreateUserRequestModel()
             {
-                Email = "Alcoholics and Parasites",
-                Name = "ООО",
-                Tasks = new List<int> { 210, 212, 213 },
-                Companies = new List<int> {  }
+                Email = "petya" + helper.DateTimeNowString + "@gmail.com",
+                Name = "Petya" + helper.DateTimeNowString,
+                Tasks = new List<int> { helper.NewTaskId(), helper.NewTaskId(), helper.NewTaskId() },
+                Companies = new List<int> { helper.NewCompanyId(1), helper.NewCompanyId(2) }
             };
             IRestResponse response = requestHelper.SendPostRequest(body);
             JObject jsonResponse = JObject.Parse(response.Content);
-            //Console.WriteLine(jsonResponse);
+            Console.WriteLine(jsonResponse);
 
-            //Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
-            //Assert.AreEqual(body.CompanyName, jsonResponse["company"]["name"].ToString());
-            //Assert.AreEqual(body.CompanyType, jsonResponse["company"]["type"].ToString());
-            //Assert.IsTrue(helper.CheckResponseForAllCompanyUsers(body.CompanyUsers, jsonResponse["company"]["users"].ToString()));
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual(body.Email, jsonResponse["email"].ToString());
+            Assert.AreEqual(body.Name, jsonResponse["name"].ToString());
+            Assert.AreEqual(dateNow, jsonResponse["date"].ToString());
+            Assert.IsTrue(helper.CheckResponseForIntDataFromRequest(body.Tasks, jsonResponse["tasks"].ToString()));
+            Assert.IsTrue(helper.CheckResponseForIntDataFromRequest(body.Companies, jsonResponse["companies"].ToString()));
+        }
+
+        [Test]
+        public void DeleteUserTest()
+        {
+            RequestHelper requestHelper = new RequestHelper("tasks/rest/deleteuser");
+            Helper helper = new Helper();
+            Dictionary<string, string> body = new Dictionary<string, string>()
+            {
+                { "email", helper.NewUserEmail()}
+            };
+            IRestResponse response = requestHelper.SendPostRequest(body);
+            JObject jsonResponse = JObject.Parse(response.Content);
+            Console.WriteLine(jsonResponse);
+
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+            Assert.AreEqual("Пользователь с email " + body["email"] + " успешно удален", jsonResponse["message"].ToString());
         }
     }
 }
