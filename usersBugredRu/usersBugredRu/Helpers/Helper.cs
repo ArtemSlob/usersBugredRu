@@ -12,7 +12,7 @@ namespace usersBugredRu.Helpers
     class Helper
     {
         public string DateTimeNowString = DateTime.Now.ToString("ddMMyyyyhhmmss");
-        public static Random RandomNumber = new Random(1000);
+        public static Random RandomNumber = new Random();
 
         public bool CheckResponseForAllCompanyUsers(List<string> companyUsersRequest, string companyUsersResponse)
         {
